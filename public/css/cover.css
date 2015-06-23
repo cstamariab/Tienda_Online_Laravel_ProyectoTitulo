@@ -1,0 +1,131 @@
+/*
+ * Globals
+ */
+
+/* Links */
+a,
+a:focus,
+a:hover {
+  color: #fff;
+}
+
+/* Custom default button */
+.btn-default,
+.btn-default:hover,
+.btn-default:focus {
+  color: #333;
+  text-shadow: none; /* Prevent inheritence from `body` */
+  background-color: #fff;
+  border: 1px solid #fff;
+}
+
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+  height: 100%;
+  background: url('../img/ek9.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+    color: #fff;
+  text-align: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,.5);
+
+}
+
+
+/* Extra markup and styles for table-esque vertical and horizontal centering */
+
+.cover-container {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Padding for spacing */
+.inner {
+  padding: 30px;
+}
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+        html,body {
+
+            height:100%;
+
+
+        }
+
+        /* Div que engloba el contenido de la página menos el footer */
+
+        #wrapper {
+
+            min-height:100%;
+            min-width: 400px;
+
+
+        }
+
+        header {
+
+            display:block;
+
+            background:#ccc;
+
+            padding:10px 0px;
+
+        }
+
+        section {
+
+            overflow: auto;
+
+            padding-bottom: 60px;
+
+
+            padding-top:160px;
+
+        }
+
+        footer {
+
+            position: relative;
+
+
+
+            margin-top: -180px;
+
+            height: 180px;
+
+            padding:30px 0px;
+
+            clear: both;
+
+            background: #101010;
+
+            text-align: center;
+
+            color: #fff;
+
+        }
+
+        .define {
+
+            width:960px;
+
+            margin:0 auto;
+
+        }
+        .cover-heading{
+          color:#ff8c00;
+          padding: 20px;
+         
+        }

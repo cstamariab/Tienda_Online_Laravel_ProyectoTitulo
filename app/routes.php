@@ -10,6 +10,23 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+Route::get('/tienda/cat1','HomeController@cat1');
+Route::get('/tienda/cat2','HomeController@cat2');
+Route::get('/tienda/cat3','HomeController@cat3');
+Route::get('/tienda/cat4','HomeController@cat4');
+/*PAYPAL*/
+Route::get('/pay_via_paypal','PaymentController@postPayment')->before('auth_user');
+
+Route::get('/payment_success', 'PaymentController@getSuccessPayment')->before('auth_user');
+
+Route::get('/cancel_order', function() {
+
+    return Redirect::route('index');
+    
+})->before('auth_user');
+
+Route::post('/editDetalle',array("as"=>'editDetalle','uses'=>'HomeController@editDetalle'));
+
 Route::get('/carrito',array('as'=>'getcarrito','uses'=>'HomeController@getCarrito'));
 
 Route::get('/carrito/{id}',array('as'=>'carrito','uses'=>'HomeController@agregarCarrito'));
@@ -99,6 +116,7 @@ Route::post('/recuperarcontrasena', array('before' => 'csrf', function(){
 Route::controller('productos','HomeController');
 Route::controller('users','HomeController');
 Route::controller('orden','HomeController');
+Route::controller('users','PaymentController');
 
 /*Redireccion a pagian de error 404*/
 

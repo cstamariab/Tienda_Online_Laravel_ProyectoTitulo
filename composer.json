@@ -4,9 +4,18 @@
 	"keywords": ["framework", "laravel"],
 	"license": "MIT",
 	"require": {
-		"laravel/framework": "4.2.*"
+		"laravel/framework": "4.2.*",
+    	"omnipay/common": "~2.3.0",
+    	"ignited/laravel-omnipay": "1.*",
+    	"omnipay/paypal": "*"
+
+
 	},
 	"autoload": {
+		"psr-0": {
+            "Ignited\\LaravelOmnipay": "src/"
+    	},
+
 		"classmap": [
 			"app/commands",
 			"app/controllers",

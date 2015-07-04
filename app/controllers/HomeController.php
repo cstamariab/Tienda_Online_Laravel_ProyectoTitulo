@@ -59,7 +59,7 @@ class HomeController extends BaseController {
 							->get();
 
 		
-				return $carrito;
+		return $carrito;
 
 	}
 	public function getCarrito(){
@@ -91,7 +91,7 @@ class HomeController extends BaseController {
 
 		$user= User::find(Auth::user()->id);
 		//reviso si este usuario tiene alguna orden
-		$ordenes=orden::where('user_id','=',$user->id)->first();
+		$ordenes=Orden::where('user_id','=',$user->id)->first();
 		
 		//si es la primera orden
 		if($ordenes == null){
@@ -101,16 +101,16 @@ class HomeController extends BaseController {
 			//un usuario puede generar solo una orden al dia , no asi su detalle
 
 			//busco la orden recientemente creada por la fecha actual
-			$ordenes=orden::where('user_id','=',$user->id )
+			$ordenes=Orden::where('user_id','=',$user->id )
 					->where('created_at','=',$date->format('Y-m-d 00:00:00'))->first();
 		// y a esa orden le creo un nuevo detalle
-			$detalle = new detalleorden();
+			$detalle = new DetalleOrden();
 			$detalle->orden_id = $ordenes->id;
 			$detalle->producto_id = $this->id;
 			$detalle->cantidad = 1;
 			$detalle->save();
 			//actualizo stock del producto
-			$cantidad = productos::find($id);
+			$cantidad = Productos::find($id);
 			$cantidad->stock -=1;
 			$cantidad->save();
 
@@ -121,7 +121,7 @@ class HomeController extends BaseController {
 		}else{
 			//si no es la primera orden del usuario , se busca la orden hecha ese dia
 			//se busca por id de user y la fecha de creacion tiene que ser igual al dia de HOY
-			$orden=orden::where('user_id','=',$user->id )
+			$orden=Orden::where('user_id','=',$user->id )
 			->where('created_at','=',$date->format('Y-m-d 00:00:00'))
 			->first();
 
@@ -131,16 +131,16 @@ class HomeController extends BaseController {
 				$this->crearOrden();
 			//busco la orden de este usuario en este dia
 			//un usuario puede generar solo una orden al dia , no asi su detalle
-			$ordenes=orden::where('user_id','=',$user->id )
+			$ordenes=Orden::where('user_id','=',$user->id )
 					->where('created_at','=',$date->format('Y-m-d 00:00:00'))->first();
 
-			$detalle = new detalleorden();
+			$detalle = new DetalleOrden();
 			$detalle->orden_id = $ordenes->id;
 			$detalle->producto_id = $this->id;
 			$detalle->cantidad = 1;
 			$detalle->save();
 
-			$cantidad = productos::find($id);
+			$cantidad = Productos::find($id);
 			$cantidad->stock -=1;
 			$cantidad->save();
 
@@ -152,7 +152,7 @@ class HomeController extends BaseController {
 				//SINO , se crea un nuevo detalle para la orden de ESTE DIA
 				
 
-				$detalleOrden = detalleorden::where('orden_id','=',$orden->id)
+				$detalleOrden = DetalleOrden::where('orden_id','=',$orden->id)
 						-> where('producto_id','=',$id)->first() ;
 				
 				//si existe ya el producto en mis detalles, se actualiza la cantidad , si no se crea un nuevo detalle
@@ -162,7 +162,7 @@ class HomeController extends BaseController {
 					$detalle = $detalleOrden;
 					$detalle->cantidad +=1;
 					$detalle->save();
-					$cantidad = productos::find($id);
+					$cantidad = Productos::find($id);
 					$cantidad->stock -=1;
 					$cantidad->save();
 					$carrito = $this->verCarrito();
@@ -170,12 +170,12 @@ class HomeController extends BaseController {
 					return View::make('HomeController.carrito')->with('carrito',$carrito);
 					
 				}else{
-					$detalle = new detalleorden();
+					$detalle = new DetalleOrden();
 					$detalle->orden_id = $orden->id;
 					$detalle->producto_id = $this->id;
 					$detalle->cantidad = 1 ;
 					$detalle->save();
-					$cantidad = productos::find($id);
+					$cantidad = Productos::find($id);
 					$cantidad->stock -=1;
 					$cantidad->save();
 
@@ -289,7 +289,7 @@ class HomeController extends BaseController {
 		
 		$date = new DateTime();
 
-		$orden = new orden();
+		$orden = new Orden();
 		$user = User::find(Auth::user()->id);
 		$orden->user_id = $user->id ;
 		$orden->created_at = $date->format('Y-m-d');
@@ -377,6 +377,7 @@ class HomeController extends BaseController {
 		}
 	
 		}
+
 		return View::make('HomeController.contacto',array('mensaje'=>$mensaje));
 	}
 
@@ -424,10 +425,83 @@ class HomeController extends BaseController {
 
 	public function getProducto($id = null)
 	{
-		$productos = productos::find($id);
+		$productos = Productos::find($id);
 
 		return View::make('HomeController.producto')->with('productos',$productos);
 		
 	}
 
+	public function editDetalle()
+	{
+		
+				
+			if(isset($_POST['edit'])){
+
+ 				$cantidad = $_POST['cantidad'];
+       			$detalle = $_POST['detalle'];
+
+       			$orden = DetalleOrden::find($detalle);
+       			$orden->cantidad = $cantidad;
+       			$orden->save();
+    			
+
+       			return Redirect::Route('getcarrito');
+	 		
+			}elseif (isset($_POST['borrar'])) {
+				
+				$detalle = $_POST['detalle'];
+
+       			$orden = DetalleOrden::find($detalle);
+       			$orden->delete();
+
+       			return Redirect::Route('getcarrito');
+			}
+
+	
+
+	}
+	public function cat1(){
+		
+		$productos = DB::table('productos')
+
+							->join('categoria','categoria.id','=','productos.categoria_id')							
+							->select('productos.id','productos.nombre','productos.precio','productos.stock','productos.descripcion','productos.imagen')
+							->where('productos.categoria_id','=',1)->get()									
+							;
+
+			return View::make('HomeController.categorias.cat1')->with('productos',$productos);
+	}
+	public function cat2(){
+		
+		$productos = DB::table('productos')
+
+							->join('categoria','categoria.id','=','productos.categoria_id')							
+							->select('productos.id','productos.nombre','productos.precio','productos.stock','productos.descripcion','productos.imagen')
+							->where('productos.categoria_id','=',2)->get()									
+							;
+
+			return View::make('HomeController.categorias.cat2')->with('productos',$productos);
+	}
+	public function cat3(){
+		
+		$productos = DB::table('productos')
+
+							->join('categoria','categoria.id','=','productos.categoria_id')							
+							->select('productos.id','productos.nombre','productos.precio','productos.stock','productos.descripcion','productos.imagen')
+							->where('productos.categoria_id','=',3)->get()									
+							;
+
+			return View::make('HomeController.categorias.cat3')->with('productos',$productos);
+	}
+	public function cat4(){
+		
+		$productos = DB::table('productos')
+
+							->join('categoria','categoria.id','=','productos.categoria_id')							
+							->select('productos.id','productos.nombre','productos.precio','productos.stock','productos.descripcion','productos.imagen')
+							->where('productos.categoria_id','=',4)->get()									
+							;
+
+			return View::make('HomeController.categorias.cat4')->with('productos',$productos);
+	}
 }

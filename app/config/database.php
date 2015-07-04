@@ -55,9 +55,9 @@ return array(
 		'mysql' => array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
-			'database'  => 'laravel',
-			'username'  => 'root',
-			'password'  => '',
+			'database'  => 'cpo18225_laravel',
+			'username'  => 'cpo18225',
+			'password'  => 'Dpr1yVPQ',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

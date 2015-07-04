@@ -36,13 +36,12 @@
                 <div class="list-group">
                     
                     
-                      <a href="/tienda" class="active list-group-item">Todos</a>
+                      <a href="/tienda" class=" list-group-item">Todos</a>
                     <a href="/tienda/cat1" class="list-group-item">Accesorios</a>
 
                     <a href="/tienda/cat2" class="list-group-item">Modificaciones</a>
                     <a href="/tienda/cat3" class="list-group-item">Motores</a>
-                    <a href="/tienda/cat4" class="list-group-item">Llantas</a>
-
+                    <a href="/tienda/cat4" class="active list-group-item">Llantas</a>
                     
                    
                 </div>
@@ -78,28 +77,11 @@
                         </div>   
                     </div>   
                 @endforeach
+                 
              	</div>  
                    
                     
-                    <div class="row">
-                   <div class="col-md-12 ">
-					      {{Form::open(array
-				          (
-				          'action'=>'HomeController@tienda',
-				          'method' => 'GET',
-				          'role' => ' form',
-				          'class' => 'form-inline'
-
-				          )
-				        )
-				      }}
-				      {{Form::input('text','buscar',Input::get('buscar'),array('class'=>'form-control'))}}
-				      {{Form::input('submit',null,'Buscar',array('class'=>'btn btn-primary'))}}
-				      {{Form::close()}}
-					      {{$productos->appends(array("buscar"=>Input::get("buscar")))->links()}}
-					</div>
-					
-                    </div>
+                    
                 </div>
 
             </div>

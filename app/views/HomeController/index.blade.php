@@ -18,7 +18,7 @@
               <a href="/tienda" class="btn btn-lg btn-danger">Ir a la Tienda <span class="glyphicon glyphicon-shopping-cart"></span></a>
             </p>
          </section>
-       {
+       
         </div>
         
             <footer>

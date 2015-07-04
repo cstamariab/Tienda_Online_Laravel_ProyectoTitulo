@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 	@include('layouts.head')
+    
      <style>
     body{
           background: url('/img/muscle-car.jpg');
@@ -10,19 +11,10 @@
     }
     </style>
     <script>
-        function validaPeso(input)
-                    {
-                    var num = input.value.replace(/\./g,'');
-                        if(!isNaN(num)){
-                            num = num.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g,'$1.');
-                            num = num.split('').reverse().join('').replace(/^[\.]/,'');
-                            input.value = num;
-                        }
-                     
-                            else{ alert('Solo se permiten numeros');
-                            input.value = input.value.replace(/[^\d\.]*/g,'');
-                        }
-                    }
+      
+    </script>
+    <script>
+
     </script>
 </head>
 <body>
@@ -34,7 +26,7 @@
         <div class="panel-heading text-center">
             <h2>Carrito de compra</h2>
         </div>
-
+         @if($carrito != null)
         <div class="panel-body">        
             <div class="alert alert-dismissable alert-success">
                     <button data-dismiss="alert" class="close" type="button">×</button>
@@ -42,53 +34,67 @@
             </div>
             <div class="row">
             <div class="col-md-12 col-xs-12 col-lg-12">
+
     			<table class="table table-bordered table-striped">
     				 <thead>
                     <tr>
                         <th>Id_Orden</th>
-                        <th>Id_Detalle</th>
+                        
                         <th>Nombre Producto</th>                                    
                         <th>Cantidad</th>
                         <th>Precio</th>
                         <th>Sub-Total</th>
+                        <th>Operaciones</th>
                                             
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $sum = 0; ?>
-                    @if($carrito != null)
+                    <?php $sum = 0;$i=0; ?>
+
+                    
                     
                         @foreach ($carrito as $carro)
-                     
+                            {{Form::open(array(
+                                'id'=> 'form',                                                              
+                                 'role'=> "form",
+                                 'action'=>"HomeController@editDetalle"
+                                 
+                                ))}}
                             <tr>
                                 <td>                         	
-                                    {{$carro->id}}
+                                    <label  name="orden"> {{$carro->id}}</label>
 
                                 </td>
+                                    <input type="hidden" value="{{$i}}" name="indice">
+                                    <input type="hidden" value="{{$carro->detalle}}" name="detalle">
+                               
                                 <td>
-                                    {{$carro->detalle}}
+                                   <label  name="nombre" >{{$carro->nombre}}</label> 
                                 </td>
                                 <td>
-                                    {{$carro->nombre}}
-                                </td>
-                                <td>{{$carro->cantidad}}
-                                    
+                                    <input type="text" class="form-control" name="cantidad" value="{{$carro->cantidad}}" min="0" required>
                                 </td>
                                 <td>
-                                   <span class="glyphicon glyphicon-usd"></span><input class="text-center" type="text" onmouseover="validaPeso(this)" value="{{$carro->precio}}" readonly>
+                                   <span class="glyphicon glyphicon-usd"></span><input name="precio" onmouseover="validaPeso(this)" class="text-center precio" type="text"  value="{{$carro->precio}}" readonly>
                                 </td>
                                 <td>
-                                   <span class="glyphicon glyphicon-usd"></span><input class="text-center" type="text"  onmouseover="validaPeso(this)" value="{{$subtotal=$carro->precio * $carro->cantidad}}"
+                                   <span class="glyphicon glyphicon-usd"></span><input name="subtotal" onmouseover="validaPeso(this)" class="text-center precio" type="text"   value="{{$subtotal=$carro->precio * $carro->cantidad}}"
                                      readonly> 
-                                     <?php $sum += $subtotal; ?>
+                                     
+                                </td>
+                                <td>
+                                    
+                                       <button type="submit" name="edit" class="btn btn-success" id="edit">Editar</button>
+                                       <button type="submit" name="borrar" class="btn btn-danger" id="borrar">Borrar</button>
+                                       <?php $sum += $subtotal;$i++; ?>
                                 </td>
                                                         
                              
                             </tr>
-                            
+                            {{form::close()}}
                        @endforeach
 
-                    @endif   
+                    
                 </tbody>
     			</table>
                 </div>
@@ -100,11 +106,11 @@
                          <table class="table table-bordered table-striped">
                             <tr>
                                  <td class="text-center">Iva: </td>
-                                <td><span class="glyphicon glyphicon-usd"></span><input class="text-center" type="text" onmouseover="validaPeso(this)" value="{{$sum * 0.19;}}" readonly> </td>
+                                <td><span class="glyphicon glyphicon-usd"></span><input onmouseover="validaPeso(this)" class="text-center precio" type="text"  value="{{$sum * 0.19;}}" readonly> </td>
                             </tr>
                             <tr>
                                <td class="text-center">Total: </td>
-                                <td><span class="glyphicon glyphicon-usd"></span><input class="text-center" type="text" onmouseover="validaPeso(this)" value="{{$sum * 1.19;}}" readonly> </td>
+                                <td><span class="glyphicon glyphicon-usd"></span><input onmouseover="validaPeso(this)" class="text-center precio" type="text"  value="{{$sum * 1.19;}}" readonly> </td>
                            </tr>
                         </table>
                     </div>
@@ -165,17 +171,20 @@
                         echo Form::label('payment', 'Forma de pago:'); 
                         echo Form::select('payment', array('PayPal' => 'PayPal'), 'PayPal', array('class' => 'form-control'));
                         ?>
-                    </div>        
-                        <?php 
-                        echo Form::hidden('cart', null, array('id' => 'cart'));
-                        echo Form::submit('¡Pagar mi pedido ahora!', array('class' => 'btn btn-primary btn-lg btn-block')); 
-                        echo Form::close(); ?>    
+                    </div>   
+                    <a class="btn btn-primary btn-lg btn-block" href="/pay_via_paypal">¡Pagar mi pedido ahora!</a>     
+                      
                 </div>
              </div>   
+        
+        @else
+        
+        <h1 class="text-center">No has Agregado nada al carrito Aun !</h1>
 
-
+        @endif   
 
 	</div>
-
+<script type="text/javascript" src="js/carrito.js"> </script>
 </body>
 </html>
+

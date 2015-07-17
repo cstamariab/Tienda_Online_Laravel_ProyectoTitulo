@@ -20,16 +20,7 @@ class HomeController extends BaseController {
 	public function index()
 	{	
 		
-		
-		//INSERT!!!
-
-		//$sql ="INSERT INTO articulos(articulo,descripcion,src)values(?,?,?)";
-		//$conn->insert($sql,array('Goggle','Google es un buscador web','http://images.forbes.com/media/lists/companies/google_416x416.jpg'));
-		//SELECT
-		//$sql="select * from articulos where id=?";
-		//$resultado=$conn->select($sql,array(1));
-
-	return View::make('HomeController.index');
+		return View::make('HomeController.index');
 
 	}
 
